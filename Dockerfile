@@ -3,8 +3,13 @@
 #
 # https://aws.amazon.com/blogs/aws/dynamodb-local-for-desktop-development/
 #
-FROM openjdk:7-jre
-MAINTAINER Dean Giberson <dean@deangiberson.com>
+FROM openjdk:7-alpine
+MAINTAINER Vinicius Eduardo <viniciuseduardo.rj@gmail.com>
+
+# update wget and add ca-certificates
+RUN   apk update \                                                                                                                                                                                                                        
+  &&   apk add ca-certificates wget \                                                                                                                                                                                                      
+  &&   update-ca-certificates
 
 # Create working space
 WORKDIR /var/dynamodb_wd
@@ -13,13 +18,13 @@ WORKDIR /var/dynamodb_wd
 EXPOSE 8000
 
 # Get the package from Amazon
-RUN wget -O /tmp/dynamodb_local_latest https://s3-us-west-2.amazonaws.com/dynamodb-local/dynamodb_local_latest.tar.gz && \
+RUN wget -O /tmp/dynamodb_local_latest https://s3-sa-east-1.amazonaws.com/dynamodb-local-sao-paulo/dynamodb_local_latest.tar.gz && \
     tar xfz /tmp/dynamodb_local_latest && \
     rm -f /tmp/dynamodb_local_latest
 
 # Default command for image
 ENTRYPOINT ["/usr/bin/java", "-Djava.library.path=.", "-jar", "DynamoDBLocal.jar", "-dbPath", "/var/dynamodb_local"]
-CMD ["-port", "8000"]
+CMD ["-port", "8000", "-sharedDb"]
 
 # Add VOLUMEs to allow backup of config, logs and databases
 VOLUME ["/var/dynamodb_local", "/var/dynamodb_wd"]
