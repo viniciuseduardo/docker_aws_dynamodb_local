@@ -3,13 +3,8 @@
 #
 # https://aws.amazon.com/blogs/aws/dynamodb-local-for-desktop-development/
 #
-FROM openjdk:7-alpine
+FROM openjdk:11-jre
 MAINTAINER Vinicius Eduardo <viniciuseduardo.rj@gmail.com>
-
-# update wget and add ca-certificates
-RUN   apk update \                                                                                                                                                                                                                        
-  &&   apk add ca-certificates wget \                                                                                                                                                                                                      
-  &&   update-ca-certificates
 
 # Create working space
 WORKDIR /var/dynamodb_wd
